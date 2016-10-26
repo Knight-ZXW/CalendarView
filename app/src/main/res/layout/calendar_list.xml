@@ -49,9 +49,10 @@
   <nimdanoob.calendarview.DatePickerView android:id="@+id/daypicker"
       android:layout_width="match_parent" android:layout_height="match_parent"
       android:layout_below="@id/container_label" android:background="@color/calendarBg"
-      app:colorNormalDay="@color/gold" app:colorMonthName="@color/gold"
-      app:colorCurrentDay="@color/calendarColorCurrentDay"
-      app:colorSelectedDayBackground="@color/gold"
-      app:colorRectBackground="@color/calendarColorCurrentDay"
+
+      app:firstYear="2000"
+      app:lastYear="2008"
+      app:firstMonth="january"
+      app:lastMonth="december"
       app:colorCircleBackground="@color/calendarColorCurrentDay"/>
 </merge>

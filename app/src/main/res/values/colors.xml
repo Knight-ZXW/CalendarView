@@ -11,11 +11,11 @@
   <color name="calendarSelectedDayText">#fff2f2f2</color>
   <color name="calendarColorCurrentDay">#FF625050</color>
   <color name="calendarSelectedRect">#6F86754d</color>
-  <color name="calendarSelectedCircle">#86754d</color>
+  <color name="calendarSelectedCircle">#ffff0000</color>
   <color name="calendarBtnDisableBg">#FFEEECE5</color>
-  <color name="calendarBg">#B2FFFFFF</color>
+  <color name="calendarBg">#FF5A0B56</color>
   <color name="calendarSeperatorColor">#3386754d</color>
-  <color name="calendarDisableDayTextColor">#4cffffff</color>
+  <color name="calendarDisableDayTextColor">#3386754d</color>
   <color name="gray">#6e6e6e</color>
   <color name="loginHintColor">#c1b8a4</color>
 

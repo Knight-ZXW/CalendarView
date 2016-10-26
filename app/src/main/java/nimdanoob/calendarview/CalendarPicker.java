@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class CalendarPicker extends LinearLayout
-    implements DatePickerView.OnYearChangedListener, DatePickerListener,
+    implements DatePickerView.OnYearChangedListener,
     SimpleMonthAdapter.OnSelectStateChangeListener {
 
   private TextView mTxtYear;
@@ -41,11 +41,16 @@ public class CalendarPicker extends LinearLayout
     mDayPickerView = (DatePickerView) findViewById(R.id.daypicker);
     mDatePickerController = new DatePickerControllerImpl(mDayPickerView);
     mDayPickerView.setOnYearChangedListener(this);
+    if (mSelectMode != 0) {
+      mDayPickerView.getSimpleMonthAdapter().setSelectMode(mSelectMode, mFixDayLength);
+    }
+    mDayPickerView.getSimpleMonthAdapter().setOnSelectStateChangeListener(this);
   }
 
-  public DatePickerController getController(){
+  public DatePickerController getController() {
     return mDatePickerController;
   }
+
   private void populateAttributes(Context context, AttributeSet attrs) {
     TypedArray ta =
         context.getTheme().obtainStyledAttributes(attrs, R.styleable.CalendarPicker, 0, 0);
@@ -54,15 +59,7 @@ public class CalendarPicker extends LinearLayout
     ta.recycle();
   }
 
-  @Override public void onDayOfMonthSelected(int year, int month, int day) {
-
-  }
-
-  @Override public void onDateRangeSelected(
-      SimpleMonthAdapter.SelectedDays<SimpleMonthAdapter.CalendarDay> selectedDays) {
-  }
-
-  public DatePickerView getDayPickerView(){
+  public DatePickerView getDayPickerView() {
     return mDayPickerView;
   }
 
@@ -74,25 +71,19 @@ public class CalendarPicker extends LinearLayout
     mBtnConfirm.setEnabled(isEnable);
   }
 
-  public SimpleMonthAdapter.SelectedDays<SimpleMonthAdapter.CalendarDay> getSelectedDays(){
+  public SimpleMonthAdapter.SelectedDays<SimpleMonthAdapter.CalendarDay> getSelectedDays() {
     return mDayPickerView.getSimpleMonthAdapter().getSelectedDays();
   }
 
-  public void setOnConfirmListener(OnClickListener listener){
+  public void setOnConfirmListener(OnClickListener listener) {
     mBtnConfirm.setOnClickListener(listener);
   }
 
-  public void setController(CalendarPicker controller) {
-    mDayPickerView.setController(controller);
-    if (mSelectMode != 0) {
-      mDayPickerView.getSimpleMonthAdapter().setSelectMode(mSelectMode, mFixDayLength);
-    }
-
-    mDayPickerView.getSimpleMonthAdapter().setOnSelectStateChangeListener(this);
+  public void setDayPickerListener(DatePickerListener listener) {
+    mDayPickerView.setDatePickerListener(listener);
   }
 
-  public void scrollerTo(){
+  public void scrollerTo() {
     getDayPickerView().scrollToPosition(5);
   }
-
 }

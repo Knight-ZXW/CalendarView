@@ -20,20 +20,20 @@
  ***********************************************************************************/
 
 package nimdanoob.calendarview;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Set;
 
 public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.ViewHolder>
     implements SimpleMonthView.OnDayClickListener {
@@ -43,20 +43,20 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
   private static final int SELECT_MODE_FIX = 102;
   private final TypedArray typedArray;
   private final Context mContext;
-  private final DatePickerListener mDatePickerListener;
   private final Calendar calendar;
   private final SelectedDays<CalendarDay> selectedDays;
   private final Integer firstMonth;
   private final Integer lastMonth;
   private final Integer firstYear;
   private final Integer lastYear;
+  private DatePickerListener mDatePickerListener;
   private int mSelectMode = SELECT_MODE_MULTI;
   private int mFixSelectDay = 7;
-  private HashMap<Integer,Set<Integer>> disableDays;
 
   private OnSelectStateChangeListener mOnSelectStateChangeListener;
+  private ArrayList<CalendarDay> disableCalendars;
 
-  public SimpleMonthAdapter(Context context, DatePickerListener datePickerListener,
+  public SimpleMonthAdapter(Context context,
       TypedArray typedArray) {
     this.typedArray = typedArray;
     calendar = Calendar.getInstance();
@@ -65,12 +65,12 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
     lastMonth = typedArray.getInt(R.styleable.DatePickerView_lastMonth,
         (calendar.get(Calendar.MONTH) - 1) % MONTHS_IN_YEAR);
     firstYear =
-        typedArray.getInt(R.styleable.DatePickerView_firstYear,calendar.get(Calendar.YEAR));
+        typedArray.getInt(R.styleable.DatePickerView_firstYear, calendar.get(Calendar.YEAR));
     lastYear =
-        typedArray.getInt(R.styleable.DatePickerView_lastYear,firstYear+1);
+        typedArray.getInt(R.styleable.DatePickerView_lastYear, firstYear + 1);
     selectedDays = new SelectedDays<>();
     mContext = context;
-    mDatePickerListener = datePickerListener;
+    //Log.e("zxw","设置了listener"+mDatePickerListener);
     init();
   }
 
@@ -91,7 +91,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
     // todo 我这里做了修改 原先 是calendar.get(Calendar.YEAR)  我改成了 firstyear
     //year = position / MONTHS_IN_YEAR + firstYear + ((firstMonth + (position
     //    % MONTHS_IN_YEAR)) / MONTHS_IN_YEAR);
-    year = firstYear + (position + firstMonth)/MONTHS_IN_YEAR;
+    year = firstYear + (position + firstMonth) / MONTHS_IN_YEAR;
 
     int selectedFirstDay = -1;
     int selectedLastDay = -1;
@@ -120,10 +120,9 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
     }
 
     v.reuse();
-    if (disableDays.get(position)!=null){
-      Set<Integer> days = disableDays.get(position);
-      v.setDisableDays(days);
-    }
+    ArrayList<CalendarDay> disableCalendarsByDate = getDisableCalendarsByDate(year, month);
+    v.setDisableDays(disableCalendarsByDate);
+
     drawingParams.put(SimpleMonthView.VIEW_PARAMS_SELECTED_BEGIN_YEAR, selectedFirstYear);
     drawingParams.put(SimpleMonthView.VIEW_PARAMS_SELECTED_LAST_YEAR, selectedLastYear);
     drawingParams.put(SimpleMonthView.VIEW_PARAMS_SELECTED_BEGIN_MONTH, selectedFirstMonth);
@@ -144,34 +143,18 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
 
   @Override
   public int getItemCount() {
-    // 设置月数
-    //int itemCount =
-    //    (((mDatePickerListener.getMaxYear() - calendar.get(Calendar.YEAR)) + 1) * MONTHS_IN_YEAR);
-
-    int itemCount = 2 * MONTHS_IN_YEAR;
-
-    if (firstMonth != -1) {
-      itemCount -= firstMonth;
-    }
-
-    if (lastMonth != -1) {
-      itemCount -= (MONTHS_IN_YEAR - lastMonth) - 1;
-    }
-    Log.e("zxw","firstMonth = "+firstMonth);
-    Log.e("zxw","lastMonth = "+lastMonth);
-    Log.e("zxw","itemCount = "+itemCount);
-    return itemCount;
+    return totalMonths();
   }
 
   protected void init() {
     if (typedArray.getBoolean(R.styleable.DatePickerView_currentDaySelected, false)) {
       onDayTapped(new CalendarDay(System.currentTimeMillis()));
     }
-    disableDays = new HashMap<>();
-
   }
 
-
+  private int totalMonths() {
+    return (lastYear - firstYear) * MONTHS_IN_YEAR + lastMonth - firstMonth + 1;
+  }
 
   public void onDayClick(SimpleMonthView simpleMonthView, CalendarDay calendarDay) {
     if (calendarDay != null) {
@@ -180,7 +163,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
   }
 
   protected void onDayTapped(CalendarDay calendarDay) {
-    mDatePickerListener.onDayOfMonthSelected(calendarDay.year, calendarDay.month + 1, calendarDay.day);
+    //mDatePickerListener.onDayOfMonthSelected(calendarDay.year, calendarDay.month + 1, calendarDay.day);
     setSelectedDay(calendarDay);
   }
 
@@ -197,12 +180,13 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
           selectedDays.setLast(calendarDay);
 
           if (selectedDays.getFirst().month < calendarDay.month) {
-            for (int i = 0; i < selectedDays.getFirst().month - calendarDay.month - 1; ++i)
-              mDatePickerListener.onDayOfMonthSelected(selectedDays.getFirst().year,
-                  selectedDays.getFirst().month + i, selectedDays.getFirst().day);
+            for (int i = 0; i < selectedDays.getFirst().month - calendarDay.month - 1; ++i) {
+              //mDatePickerListener.onDayOfMonthSelected(selectedDays.getFirst().year,
+              //    selectedDays.getFirst().month + i, selectedDays.getFirst().day);
+            }
           }
           isReady = true;
-          mDatePickerListener.onDateRangeSelected(selectedDays);
+          //mDatePickerListener.onDateRangeSelected(selectedDays);
         } else if (selectedDays.getLast() != null) {
           selectedDays.setFirst(calendarDay);
           selectedDays.setLast(null);
@@ -225,6 +209,25 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
     }
     notifySelectedStateChange(isReady);
     notifyDataSetChanged();
+  }
+
+  public void setDisableDays(ArrayList<CalendarDay> calendarDays) {
+    disableCalendars = calendarDays;
+  }
+
+  private ArrayList<CalendarDay> getDisableCalendarsByDate(int year, int month) {
+    ArrayList<CalendarDay> calendarDays = new ArrayList<>();
+    for (CalendarDay calendarDay : disableCalendars) {
+      if (calendarDay.year == year && calendarDay.month == month){
+        calendarDays.add(calendarDay);
+      }
+    }
+    return calendarDays;
+  }
+
+  private int getViewIndex(int year, int month) {
+    //todo warn 注意我这个month是否要改成从 0开始
+    return (year - firstYear) * MONTHS_IN_YEAR + month - firstMonth;
   }
 
   private void notifySelectedStateChange(boolean isReady) {

@@ -9,14 +9,14 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.text.format.DateUtils;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import java.security.InvalidParameterException;
 import java.text.DateFormatSymbols;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 public class SimpleMonthView extends View {
 
@@ -94,12 +94,12 @@ public class SimpleMonthView extends View {
   private DateFormatSymbols mDateFormatSymbols = new DateFormatSymbols();
   private OnDayClickListener mOnDayClickListener;
   //todo 不可用的天数
-  private Set<Integer> mDisableDays;
+  private ArrayList<SimpleMonthAdapter.CalendarDay> mDisableDays;
 
   public SimpleMonthView(Context context, TypedArray typedArray) {
     super(context);
     Resources resources = getResources();
-    mDisableDays = new HashSet<>();
+    mDisableDays = new ArrayList<>();
     mDayLabelCalendar = Calendar.getInstance();
     mCalendar = Calendar.getInstance();
     today = new Time(Time.getCurrentTimezone());
@@ -156,14 +156,8 @@ public class SimpleMonthView extends View {
     initView();
   }
 
-  public void setDisableDay(int day, boolean enable) {
-    if (enable) {
-      mDisableDays.add(day);
-    } else {
-      mDisableDays.remove(day);
-    }
-  }
-  public void setDisableDays(Set disableDays){
+
+  public void setDisableDays(ArrayList<SimpleMonthAdapter.CalendarDay> disableDays){
     mDisableDays = disableDays;
   }
 
@@ -299,7 +293,8 @@ public class SimpleMonthView extends View {
         // 如果是今天
         mMonthNumPaint.setColor(mCurrentDayTextColor);
         mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-      } else if (mDisableDays.contains(day)) {
+      } else if (isDisableDay(day)) {
+        Log.e("zxw","发现一个不可用的天数");
         mMonthNumPaint.setColor(mDisableDayNumColor);
       } else {
         mMonthNumPaint.setColor(mDayNumColor);
@@ -571,7 +566,7 @@ public class SimpleMonthView extends View {
   private void onDayClick(SimpleMonthAdapter.CalendarDay calendarDay) {
     int day = calendarDay.day;
     //如果是不可用直接退出
-    if (mDisableDays.contains(day)) return;
+    if (mDisableDays.contains(calendarDay)) return;
     if (mOnDayClickListener != null && (isPrevDayEnabled || !((calendarDay.month == today.month)
         && (calendarDay.year == today.year)
         && calendarDay.day < today.monthDay))) {
@@ -585,6 +580,14 @@ public class SimpleMonthView extends View {
 
   public int getYear() {
     return mYear;
+  }
+  private boolean isDisableDay(int day){
+    for(SimpleMonthAdapter.CalendarDay calendarDay :mDisableDays){
+      if (calendarDay.day == day){
+        return true;
+      }
+    }
+    return false;
   }
 
   public interface OnDayClickListener {
