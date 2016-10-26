@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <declare-styleable name="DayPickerView">
+  <declare-styleable name="DatePickerView">
     <attr format="color" name="colorCurrentDay"/>
     <attr format="color" name="colorSelectedDayBackground"/>
     <attr format="color" name="colorRectBackground"/>
@@ -47,5 +47,15 @@
       <enum name="november" value="10"/>
       <enum name="december" value="11"/>
     </attr>
+    <attr format="integer" name="firstYear"/>
+    <attr format="integer" name="lastYear"/>
+  </declare-styleable>
+  <declare-styleable name="CalendarPicker">
+    <attr format="enum" name="cp_selectMode">
+      <enum name="SELECT_MODE_MULTI" value="100"/>
+      <enum name="SELECT_MODE_SINGLE" value="101"/>
+      <enum name="SELECT_MODE_FIX" value="102"/>
+    </attr>
+    <attr format="integer" name="cp_fixDayLength"/>
   </declare-styleable>
 </resources>

@@ -8,4 +8,24 @@
   <dimen name="calendar_header_month_height">25dp</dimen>
   <dimen name="calendar_selected_day_radius">18dp</dimen>
   <dimen name="calendar_height">270dp</dimen>
+
+  <dimen name="layout_height_40dp">18sp</dimen>
+
+  <dimen name="divider_dp">1dp</dimen>
+
+  <dimen name="text_size_18sp">18sp</dimen>
+  <dimen name="text_size_12sp">12sp</dimen>
+
+  <dimen name="app_margin_14dp">14dp</dimen>
+
+  <dimen name="layout_height_45dp">45dp</dimen>
+
+  <dimen name="app_margin_18dp">18sp</dimen>
+  <dimen name="app_margin_10dp">10dp</dimen>
+  <dimen name="app_margin_4dp">4dp</dimen>
+
+  <dimen name="layout_width_130dp">130dp</dimen>
+  <!-- Default screen margins, per the Android Design guidelines. -->
+  <dimen name="activity_horizontal_margin">16dp</dimen>
+  <dimen name="activity_vertical_margin">16dp</dimen>
 </resources>
