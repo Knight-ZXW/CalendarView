@@ -3,6 +3,7 @@
   <declare-styleable name="DatePickerView">
     <attr format="color" name="colorCurrentDay"/>
     <attr format="color" name="colorSelectedDayBackground"/>
+    <attr format="color" name="colorSelectedFirstOrLastDayBackground"/>
     <attr format="color" name="colorRectBackground"/>
     <attr format="color" name="colorCircleBackground"/>
     <attr format="color" name="colorSelectedDayText"/>
