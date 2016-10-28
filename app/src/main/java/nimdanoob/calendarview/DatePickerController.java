@@ -1,9 +1,16 @@
 package nimdanoob.calendarview;
 
+import android.support.annotation.Nullable;
 import java.util.ArrayList;
 
 public interface DatePickerController {
-  void setStartDate();
-  void setDisableDay(SimpleMonthAdapter.CalendarDay calendarDay);
-  void setDisableDays(ArrayList<SimpleMonthAdapter.CalendarDay> calendarDays);
+  DatePickerController setFirstDate(int year,int month);
+  DatePickerController setEndDate(int year,int month);
+  DatePickerController setDisableDay(SimpleMonthAdapter.CalendarDay calendarDay);
+  DatePickerController setDisableDays(ArrayList<SimpleMonthAdapter.CalendarDay> calendarDays);
+  DatePickerController setDayPickerListener(DatePickerListener listener);
+  DatePickerController setSelectMode(int mode, @Nullable int fixSelectDay);
+
+  SimpleMonthAdapter.SelectedDays<SimpleMonthAdapter.CalendarDay> getSelectedDays();
+  void updateUi();
 }

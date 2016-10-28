@@ -46,10 +46,10 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
   private final Context mContext;
   private final Calendar calendar;
   private final SelectedDays<CalendarDay> selectedDays;
-  private final Integer firstMonth;
-  private final Integer lastMonth;
-  private final Integer firstYear;
-  private final Integer lastYear;
+  private  Integer firstMonth;
+  private  Integer lastMonth;
+  private  Integer firstYear;
+  private  Integer lastYear;
   private DatePickerListener mDatePickerListener;
   private int mSelectMode = SELECT_MODE_MULTI;
   private int mFixSelectDay = 7;
@@ -73,6 +73,16 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
     mContext = context;
     //Log.e("zxw","设置了listener"+mDatePickerListener);
     init();
+  }
+
+  public void setFirstDate(int year,int month){
+    firstYear = year;
+    firstMonth = month;
+  }
+
+  public void setLastDate(int year,int month){
+    lastYear = year;
+    lastMonth = month;
   }
 
   @Override
