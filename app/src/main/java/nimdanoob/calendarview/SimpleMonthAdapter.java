@@ -26,6 +26,7 @@ import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -163,7 +164,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
   }
 
   protected void onDayTapped(CalendarDay calendarDay) {
-    //mDatePickerListener.onDayOfMonthSelected(calendarDay.year, calendarDay.month + 1, calendarDay.day);
+    mDatePickerListener.onDayOfMonthSelected(calendarDay.year, calendarDay.month + 1, calendarDay.day);
     setSelectedDay(calendarDay);
   }
 
@@ -181,12 +182,12 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
 
           if (selectedDays.getFirst().month < calendarDay.month) {
             for (int i = 0; i < selectedDays.getFirst().month - calendarDay.month - 1; ++i) {
-              //mDatePickerListener.onDayOfMonthSelected(selectedDays.getFirst().year,
-              //    selectedDays.getFirst().month + i, selectedDays.getFirst().day);
+              mDatePickerListener.onDayOfMonthSelected(selectedDays.getFirst().year,
+                  selectedDays.getFirst().month + i, selectedDays.getFirst().day);
             }
           }
           isReady = true;
-          //mDatePickerListener.onDateRangeSelected(selectedDays);
+          mDatePickerListener.onDateRangeSelected(selectedDays);
         } else if (selectedDays.getLast() != null) {
           selectedDays.setFirst(calendarDay);
           selectedDays.setLast(null);
@@ -245,6 +246,15 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
 
   public void setOnSelectStateChangeListener(OnSelectStateChangeListener listener) {
     this.mOnSelectStateChangeListener = listener;
+  }
+
+  protected DatePickerListener getDatePickerListener() {
+    return mDatePickerListener;
+  }
+
+  public void setDatePickerListener(DatePickerListener datePickerListener) {
+    this.mDatePickerListener = datePickerListener;
+    Log.e("zxw","设置mDatePickerListener"+mDatePickerListener);
   }
 
   public SelectedDays<CalendarDay> getSelectedDays() {

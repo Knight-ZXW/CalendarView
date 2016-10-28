@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 
 public class DatePickerView extends RecyclerView {
   protected Context mContext;
@@ -13,13 +12,13 @@ public class DatePickerView extends RecyclerView {
   protected int mCurrentScrollState = 0;
   protected long mPreviousScrollPosition;
   protected int mPreviousScrollState = 0;
-  private DatePickerListener mDatePickerListener;
   private TypedArray typedArray;
   private OnScrollListener onScrollListener;
   private LinearLayoutManager mLinearLayoutManager;
   private int mCurrentYear;
   private OnYearChangedListener mOnYearChangedListener;
   private DatePickerController mDatePickerController;
+
   public DatePickerView(Context context) {
     this(context, null);
   }
@@ -98,12 +97,11 @@ public class DatePickerView extends RecyclerView {
   }
 
   protected DatePickerListener getDatePickerListener() {
-    return mDatePickerListener;
+    return getSimpleMonthAdapter().getDatePickerListener();
   }
 
   public void setDatePickerListener(DatePickerListener datePickerListener) {
-    this.mDatePickerListener = datePickerListener;
-    Log.e("zxw","设置mDatePickerListener"+mDatePickerListener);
+    getSimpleMonthAdapter().setDatePickerListener(datePickerListener);
   }
 
   protected TypedArray getTypedArray() {
@@ -114,11 +112,11 @@ public class DatePickerView extends RecyclerView {
     return mAdapter;
   }
 
-  public interface OnYearChangedListener {
-    void onYearChange(int year);
+  public void setDisable() {
+
   }
 
-  public void setDisable(){
-
+  public interface OnYearChangedListener {
+    void onYearChange(int year);
   }
 }

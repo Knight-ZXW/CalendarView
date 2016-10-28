@@ -286,7 +286,6 @@ public class SimpleMonthView extends View {
         mMonthNumPaint.setColor(mCurrentDayTextColor);
         mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
       } else {
-        Log.e("zxw", "正常的字体颜色" + mDayNumColor);
         mMonthNumPaint.setColor(mDayNumColor);
         mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
       }
