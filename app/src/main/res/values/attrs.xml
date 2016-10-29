@@ -50,6 +50,12 @@
     </attr>
     <attr format="integer" name="firstYear"/>
     <attr format="integer" name="lastYear"/>
+    <attr format="enum" name="selectMode">
+      <enum name="SELECT_MODE_MULTI" value="100"/>
+      <enum name="SELECT_MODE_SINGLE" value="101"/>
+      <enum name="SELECT_MODE_FIX" value="102"/>
+    </attr>
+    <attr format="integer" name="fixDayLength"/>
   </declare-styleable>
   <declare-styleable name="CalendarPicker">
     <attr format="enum" name="cp_selectMode">

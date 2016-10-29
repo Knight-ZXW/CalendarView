@@ -112,10 +112,6 @@ public class DatePickerView extends RecyclerView {
     return mAdapter;
   }
 
-  public void setDisable() {
-
-  }
-
   public interface OnYearChangedListener {
     void onYearChange(int year);
   }

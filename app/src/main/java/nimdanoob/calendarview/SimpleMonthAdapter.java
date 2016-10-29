@@ -55,12 +55,14 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
   private int mFixSelectDay = 7;
 
   private OnSelectStateChangeListener mOnSelectStateChangeListener;
-  private ArrayList<CalendarDay> disableCalendars;
+  private ArrayList<CalendarDay> disableCalendars = new ArrayList<>();
 
   public SimpleMonthAdapter(Context context,
       TypedArray typedArray) {
     this.typedArray = typedArray;
     calendar = Calendar.getInstance();
+    mSelectMode = typedArray.getInt(R.styleable.DatePickerView_selectMode,SELECT_MODE_SINGLE);
+    mFixSelectDay = typedArray.getInt(R.styleable.DatePickerView_fixDayLength,7);
     firstMonth =
         typedArray.getInt(R.styleable.DatePickerView_firstMonth, calendar.get(Calendar.MONTH));
     lastMonth = typedArray.getInt(R.styleable.DatePickerView_lastMonth,
@@ -94,7 +96,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
   @Override
   public void onBindViewHolder(ViewHolder viewHolder, int position) {
     final SimpleMonthView v = viewHolder.simpleMonthView;
-    final HashMap<String, Integer> drawingParams = new HashMap<String, Integer>();
+    final HashMap<String, Integer> drawingParams = new HashMap<>();
     int month;
     int year;
 
@@ -174,10 +176,20 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
   }
 
   protected void onDayTapped(CalendarDay calendarDay) {
-    mDatePickerListener.onDayOfMonthSelected(calendarDay.year, calendarDay.month + 1, calendarDay.day);
     setSelectedDay(calendarDay);
   }
 
+  private void notifyDayOfMonthSelected(int year,int month,int day){
+    if (mDatePickerListener!=null){
+      mDatePickerListener.onDayOfMonthSelected(year,month,day);
+    }
+  }
+
+  private void notifyDateRangeSelected(SimpleMonthAdapter.SelectedDays<SimpleMonthAdapter.CalendarDay> selectedDays){
+    if (mDatePickerListener!=null){
+      mDatePickerListener.onDateRangeSelected(selectedDays);
+    }
+  }
   public void setSelectedDay(CalendarDay calendarDay) {
     boolean isReady = false;
     switch (mSelectMode) {
@@ -185,6 +197,7 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         selectedDays.setFirst(calendarDay);
         selectedDays.setLast(calendarDay);
         isReady = true;
+        notifyDateRangeSelected(selectedDays);
         break;
       case SELECT_MODE_MULTI:
         if (selectedDays.getFirst() != null && selectedDays.getLast() == null) {
@@ -192,12 +205,12 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
 
           if (selectedDays.getFirst().month < calendarDay.month) {
             for (int i = 0; i < selectedDays.getFirst().month - calendarDay.month - 1; ++i) {
-              mDatePickerListener.onDayOfMonthSelected(selectedDays.getFirst().year,
+              notifyDayOfMonthSelected(selectedDays.getFirst().year,
                   selectedDays.getFirst().month + i, selectedDays.getFirst().day);
             }
           }
           isReady = true;
-          mDatePickerListener.onDateRangeSelected(selectedDays);
+          notifyDateRangeSelected(selectedDays);
         } else if (selectedDays.getLast() != null) {
           selectedDays.setFirst(calendarDay);
           selectedDays.setLast(null);
@@ -213,8 +226,8 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         calendarDay.year = c.get(Calendar.YEAR);
         calendarDay.month = c.get(Calendar.MONTH);
         calendarDay.day = c.get(Calendar.DATE);
-
         selectedDays.setLast(calendarDay);
+        notifyDateRangeSelected(selectedDays);
         isReady = true;
         break;
     }
