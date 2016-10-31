@@ -1,6 +1,7 @@
 package nimdanoob.calendarview;
 
 import android.support.annotation.Nullable;
+import android.view.View;
 import java.util.ArrayList;
 
 public class DatePickerControllerImpl implements DatePickerController {
@@ -37,6 +38,10 @@ public class DatePickerControllerImpl implements DatePickerController {
   @Override public DatePickerController setSelectMode(int mode, @Nullable int fixSelectDay) {
     mDatePickerView.getSimpleMonthAdapter().setSelectMode(mode,fixSelectDay);
     return this;
+  }
+
+  @Override public DatePickerController setOnConfirmListener(View.OnClickListener listener) {
+    return null;
   }
 
   @Override

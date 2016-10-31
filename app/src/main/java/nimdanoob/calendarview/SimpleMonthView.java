@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import java.security.InvalidParameterException;
 import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -277,10 +278,6 @@ public class SimpleMonthView extends View {
     while (day <= mNumCells) {
       c.day = day;
       int x = paddingDay * (1 + dayOffset * 2) + mPadding;
-
-
-
-
       if (mHasToday && (mToday == day)) {
         // 如果是今天
         mMonthNumPaint.setColor(mCurrentDayTextColor);
@@ -418,7 +415,7 @@ public class SimpleMonthView extends View {
 
   private void drawMonthTitle(Canvas canvas, int x, int width, int dayOffset) {
     int y = MONTH_HEADER_SIZE / 2 + MONTH_LABEL_TEXT_SIZE / 2;
-    StringBuilder stringBuilder = new StringBuilder(getMonthAndYearString().toLowerCase());
+    StringBuilder stringBuilder = new StringBuilder(getMonthString().toLowerCase());
     stringBuilder.setCharAt(0, Character.toUpperCase(stringBuilder.charAt(0)));
     mMonthName = stringBuilder.toString();
     canvas.drawText(stringBuilder.toString(),
@@ -501,12 +498,16 @@ public class SimpleMonthView extends View {
         - mWeekStart;
   }
 
-  private String getMonthAndYearString() {
+  private String getMonthString() {
     int flags =
         DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_NO_YEAR | DateUtils.FORMAT_NO_MONTH_DAY;
     mStringBuilder.setLength(0);
     long millis = mCalendar.getTimeInMillis();
-    return DateUtils.formatDateRange(getContext(), millis, millis, flags);
+    String monthStr = DateUtils.formatDateTime(getContext(), millis, flags);
+    if (monthStr.endsWith("月")){
+      return new SimpleDateFormat("M").format(mCalendar.getTime())+"月";
+    }
+    return monthStr;
   }
 
   public void setMonthParams(HashMap<String, Integer> params) {
