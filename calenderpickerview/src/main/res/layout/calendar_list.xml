@@ -19,7 +19,7 @@
     </LinearLayout>
 
   </LinearLayout>
-  <nimdanoob.calendarview.DatePickerView android:id="@+id/daypicker"
+  <nimdanoob.calenderpickerview.DatePickerView android:id="@+id/daypicker"
       android:layout_width="match_parent" android:layout_height="match_parent"
       android:layout_below="@id/container_label" android:background="@color/calendarBg"
       app:firstYear="2000"

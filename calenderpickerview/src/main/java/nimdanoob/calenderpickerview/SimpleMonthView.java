@@ -1,4 +1,4 @@
-package nimdanoob.calendarview;
+package nimdanoob.calenderpickerview;
 
 import android.content.Context;
 import android.content.res.Resources;

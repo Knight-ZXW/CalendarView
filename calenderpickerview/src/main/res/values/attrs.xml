@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="DatePickerView">
+    <attr format="color" name="colorCurrentDay"/>
+    <attr format="color" name="colorSelectedDayBackground"/>
+    <attr format="color" name="colorSelectedFirstOrLastDayBackground"/>
+    <attr format="color" name="colorSelectedFirstDayBackground"/>
+    <attr format="color" name="colorRectBackground"/>
+    <attr format="color" name="colorCircleBackground"/>
+    <attr format="color" name="colorSelectedDayText"/>
+    <attr format="color" name="colorPreviousDay"/>
+    <attr format="color" name="colorNormalDay"/>
+    <attr format="color" name="colorMonthName"/>
+    <attr format="color" name="colorDayName"/>
+    <attr format="dimension" name="textSizeDay"/>
+    <attr format="dimension" name="textSizeMonth"/>
+    <attr format="dimension" name="textSizeDayName"/>
+    <attr format="dimension" name="headerMonthHeight"/>
+    <attr format="dimension" name="selectedDayRadius"/>
+    <attr format="dimension" name="calendarHeight"/>
+    <attr format="boolean" name="enablePreviousDay"/>
+    <attr format="boolean" name="currentDaySelected"/>
+    <attr format="boolean" name="drawRoundRect"/>
+    <attr format="enum" name="firstMonth">
+      <enum name="january" value="0"/>
+      <enum name="february" value="1"/>
+      <enum name="march" value="2"/>
+      <enum name="april" value="3"/>
+      <enum name="may" value="4"/>
+      <enum name="june" value="5"/>
+      <enum name="july" value="6"/>
+      <enum name="august" value="7"/>
+      <enum name="september" value="8"/>
+      <enum name="october" value="9"/>
+      <enum name="november" value="10"/>
+      <enum name="december" value="11"/>
+    </attr>
+    <attr format="enum" name="lastMonth">
+      <enum name="january" value="0"/>
+      <enum name="february" value="1"/>
+      <enum name="march" value="2"/>
+      <enum name="april" value="3"/>
+      <enum name="may" value="4"/>
+      <enum name="june" value="5"/>
+      <enum name="july" value="6"/>
+      <enum name="august" value="7"/>
+      <enum name="september" value="8"/>
+      <enum name="october" value="9"/>
+      <enum name="november" value="10"/>
+      <enum name="december" value="11"/>
+    </attr>
+    <attr format="integer" name="firstYear"/>
+    <attr format="integer" name="lastYear"/>
+    <attr format="enum" name="selectMode">
+      <enum name="SELECT_MODE_MULTI" value="100"/>
+      <enum name="SELECT_MODE_SINGLE" value="101"/>
+      <enum name="SELECT_MODE_FIX" value="102"/>
+    </attr>
+    <attr format="integer" name="fixDayLength"/>
+  </declare-styleable>
+  <declare-styleable name="CalendarPicker">
+    <attr format="enum" name="cp_selectMode">
+      <enum name="SELECT_MODE_MULTI" value="100"/>
+      <enum name="SELECT_MODE_SINGLE" value="101"/>
+      <enum name="SELECT_MODE_FIX" value="102"/>
+    </attr>
+    <attr format="integer" name="cp_fixDayLength"/>
+    <attr format="reference" name = "cp_background"/>
+    <attr format="reference" name="cp_header_background"/>
+  </declare-styleable>
+</resources>

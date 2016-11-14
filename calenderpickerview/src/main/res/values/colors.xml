@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="colorPrimary">#3F51B5</color>
+  <color name="colorPrimaryDark">#303F9F</color>
+  <color name="colorAccent">#FF4081</color>
+
+  <!--SuncityCalendarPicker-->
+  <color name="calendarNormalDay">#ffffffff</color>
+  <color name="calendarFirstEqualsLastNumColor">#ffaa0000</color>
+  <color name="calendarSelectedDayText">#fff2f2f2</color>
+  <color name="calendarColorCurrentDay">#FF625050</color>
+
+
+  <color name="calendarSelectedRect">#33ffffff</color>
+  <color name="calendarSelectedCircle">#ffaa85a7</color>
+  <color name="calendarSelectedFirstColor">#ffaa85a7</color>
+  <color name="calendarBtnDisableBg">#FFEEECE5</color>
+  <color name="calendarBg">#FF5A0B56</color>
+  <color name="calendarSeperatorColor">#3386754d</color>
+  <color name="calendarDisableDayTextColor">#4cffffff</color>
+  <color name="calendarMonthTitleBg">#fff2f2f2</color>
+  <color name="gray">#6e6e6e</color>
+  <color name="loginHintColor">#c1b8a4</color>
+
+  <color name="gold">#86754d</color>
+  <color name="btnDisableBg">#FFEEECE5</color>
+  <color name="toolbarDivider">#3386754d</color>
+</resources>

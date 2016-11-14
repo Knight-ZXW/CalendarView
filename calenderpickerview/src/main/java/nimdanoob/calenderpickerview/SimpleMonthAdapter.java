@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ***********************************************************************************/
 
-package nimdanoob.calendarview;
+package nimdanoob.calenderpickerview;
 
 import android.content.Context;
 import android.content.res.TypedArray;

@@ -1,4 +1,4 @@
-package nimdanoob.calendarview;
+package nimdanoob.calenderpickerview;
 
 import java.util.Calendar;
 
