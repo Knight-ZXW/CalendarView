@@ -65,5 +65,7 @@
       <enum name="SELECT_MODE_FIX" value="102"/>
     </attr>
     <attr format="integer" name="cp_fixDayLength"/>
+    <attr format="reference" name = "cp_background"/>
+    <attr format="reference" name="cp_header_background"/>
   </declare-styleable>
 </resources>

@@ -2,9 +2,11 @@ package nimdanoob.calendarview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 import java.util.ArrayList;
 
@@ -14,6 +16,9 @@ public class CalendarPicker extends LinearLayout
   private DatePickerView mDatePickerView;
   private int mSelectMode;
   private int mFixDayLength;
+  private Drawable mCalendarBg;
+  private View mHeaderView;
+  private Drawable mCalendarHeaderBg;
 
   public CalendarPicker(Context context) {
     this(context, null);
@@ -33,8 +38,15 @@ public class CalendarPicker extends LinearLayout
     setOrientation(VERTICAL);
     LayoutInflater.from(context).inflate(R.layout.calendar_list, this);
     mDatePickerView = (DatePickerView) findViewById(R.id.daypicker);
+    mHeaderView =  findViewById(R.id.container_label);
     if (mSelectMode != 0) {
       mDatePickerView.getSimpleMonthAdapter().setSelectMode(mSelectMode, mFixDayLength);
+    }
+    if (mCalendarBg!=null) {
+      mDatePickerView.setBackgroundDrawable(mCalendarBg);
+    }
+    if (mCalendarHeaderBg != null){
+      mHeaderView.setBackgroundDrawable(mCalendarHeaderBg);
     }
   }
 
@@ -47,6 +59,9 @@ public class CalendarPicker extends LinearLayout
         context.getTheme().obtainStyledAttributes(attrs, R.styleable.CalendarPicker, 0, 0);
     mSelectMode = ta.getInt(R.styleable.CalendarPicker_cp_selectMode, 0);
     mFixDayLength = ta.getInt(R.styleable.CalendarPicker_cp_fixDayLength, 0);
+    mCalendarBg =
+        ta.getDrawable(R.styleable.CalendarPicker_cp_background);
+    mCalendarHeaderBg =  ta.getDrawable(R.styleable.CalendarPicker_cp_header_background);
     ta.recycle();
   }
 
