@@ -6,17 +6,18 @@
 
   <!--SuncityCalendarPicker-->
   <color name="calendarNormalDay">#ffffffff</color>
-  <color name="calendarLabelBackground">#f7f6f2</color>
-  <color name="calendarFirstEqualsLastNumBackground">@color/colorAccent</color>
-  <color name="calendarSelectedFirstOrLastBgColor">#7dffffff</color>
+  <color name="calendarFirstEqualsLastNumColor">#ffaa0000</color>
   <color name="calendarSelectedDayText">#fff2f2f2</color>
   <color name="calendarColorCurrentDay">#FF625050</color>
-  <color name="calendarSelectedRect">#7dffffff</color>
-  <color name="calendarSelectedCircle">#7dffffff</color>
+
+
+  <color name="calendarSelectedRect">#33ffffff</color>
+  <color name="calendarSelectedCircle">#ffaa85a7</color>
+  <color name="calendarSelectedFirstColor">#ffaa85a7</color>
   <color name="calendarBtnDisableBg">#FFEEECE5</color>
   <color name="calendarBg">#FF5A0B56</color>
   <color name="calendarSeperatorColor">#3386754d</color>
-  <color name="calendarDisableDayTextColor">#3386754d</color>
+  <color name="calendarDisableDayTextColor">#4cffffff</color>
   <color name="calendarMonthTitleBg">#fff2f2f2</color>
   <color name="gray">#6e6e6e</color>
   <color name="loginHintColor">#c1b8a4</color>

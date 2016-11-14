@@ -4,36 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
   <LinearLayout
       android:layout_width="match_parent" android:layout_height="wrap_content"
-      android:background="@color/calendarLabelBackground" android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/ly_confirm"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:orientation="horizontal">
-      <TextView android:id="@+id/text_year"
-          android:layout_width="wrap_content" android:layout_height="@dimen/calendar_label_height"
-          android:textSize="@dimen/text_size_18sp" android:textColor="@color/gold"
-          android:layout_weight="1" android:layout_marginLeft="@dimen/app_margin_14dp"
-          android:layout_marginStart="@dimen/app_margin_14dp"
-          tools:text="2016" android:gravity="center_vertical"/>
-
-      <Button android:id="@+id/btn_confirm_date"
-          android:layout_width="wrap_content" android:layout_height="@dimen/layout_height_45dp"
-          android:minWidth="@dimen/layout_width_130dp" android:enabled="false"
-          android:text="@string/confirm_date" android:layout_gravity="center"
-          android:layout_marginRight="@dimen/app_margin_14dp"
-          android:layout_marginEnd="@dimen/app_margin_14dp"
-          android:paddingLeft="@dimen/app_margin_18dp" android:paddingRight="@dimen/app_margin_10dp"
-          android:drawablePadding="@dimen/app_margin_4dp"
-          android:textColor="@drawable/selector_login_btn_txtcolor"
-          android:drawableLeft="@drawable/selector_calendar_confirm_df"
-          android:background="@drawable/selector_calendar_confirm_bg"/>
-    </LinearLayout>
+      android:background="@drawable/bg_drawable_calendar_header" android:orientation="vertical">
 
     <LinearLayout android:id="@+id/container_label"
         android:layout_width="match_parent" android:layout_height="28dp"
-        android:paddingTop="8dp" android:paddingBottom="4dp"
-        android:layout_below="@id/text_year">
+        android:paddingTop="8dp" android:paddingBottom="4dp">
       <TextView style="@style/Base.SuncityCalendarLabel" android:text="@string/sunday_short"/>
       <TextView style="@style/Base.SuncityCalendarLabel" android:text="@string/monday_short"/>
       <TextView style="@style/Base.SuncityCalendarLabel" android:text="@string/tuesday_short"/>

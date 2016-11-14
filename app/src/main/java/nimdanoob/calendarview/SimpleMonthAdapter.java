@@ -26,7 +26,6 @@ import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -73,7 +72,6 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
         typedArray.getInt(R.styleable.DatePickerView_lastYear, firstYear + 1);
     selectedDays = new SelectedDays<>();
     mContext = context;
-    //Log.e("zxw","设置了listener"+mDatePickerListener);
     init();
   }
 
@@ -102,8 +100,6 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
 
     month = (firstMonth + (position % MONTHS_IN_YEAR)) % MONTHS_IN_YEAR;
     // todo 我这里做了修改 原先 是calendar.get(Calendar.YEAR)  我改成了 firstyear
-    //year = position / MONTHS_IN_YEAR + firstYear + ((firstMonth + (position
-    //    % MONTHS_IN_YEAR)) / MONTHS_IN_YEAR);
     year = firstYear + (position + firstMonth) / MONTHS_IN_YEAR;
 
     int selectedFirstDay = -1;
@@ -277,7 +273,6 @@ public class SimpleMonthAdapter extends RecyclerView.Adapter<SimpleMonthAdapter.
 
   public void setDatePickerListener(DatePickerListener datePickerListener) {
     this.mDatePickerListener = datePickerListener;
-    Log.e("zxw","设置mDatePickerListener"+mDatePickerListener);
   }
 
   public SelectedDays<CalendarDay> getSelectedDays() {

@@ -17,7 +17,6 @@ public class DatePickerView extends RecyclerView {
   private LinearLayoutManager mLinearLayoutManager;
   private int mCurrentYear;
   private OnYearChangedListener mOnYearChangedListener;
-  private DatePickerController mDatePickerController;
 
   public DatePickerView(Context context) {
     this(context, null);

@@ -2,20 +2,16 @@ package nimdanoob.calendarview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import java.util.ArrayList;
 
 public class CalendarPicker extends LinearLayout
-    implements DatePickerView.OnYearChangedListener,
-    SimpleMonthAdapter.OnSelectStateChangeListener {
+    implements DatePickerController {
 
-  private TextView mTxtYear;
-  private Button mBtnConfirm;
-  private DatePickerView mDayPickerView;
-  private DatePickerController mDatePickerController;
+  private DatePickerView mDatePickerView;
   private int mSelectMode;
   private int mFixDayLength;
 
@@ -36,19 +32,14 @@ public class CalendarPicker extends LinearLayout
   private void initializeViews(Context context) {
     setOrientation(VERTICAL);
     LayoutInflater.from(context).inflate(R.layout.calendar_list, this);
-    mTxtYear = (TextView) findViewById(R.id.text_year);
-    mBtnConfirm = (Button) findViewById(R.id.btn_confirm_date);
-    mDayPickerView = (DatePickerView) findViewById(R.id.daypicker);
-    mDatePickerController = new DatePickerControllerImpl(mDayPickerView);
-    mDayPickerView.setOnYearChangedListener(this);
+    mDatePickerView = (DatePickerView) findViewById(R.id.daypicker);
     if (mSelectMode != 0) {
-      mDayPickerView.getSimpleMonthAdapter().setSelectMode(mSelectMode, mFixDayLength);
+      mDatePickerView.getSimpleMonthAdapter().setSelectMode(mSelectMode, mFixDayLength);
     }
-    mDayPickerView.getSimpleMonthAdapter().setOnSelectStateChangeListener(this);
   }
 
   public DatePickerController getController() {
-    return mDatePickerController;
+    return this;
   }
 
   private void populateAttributes(Context context, AttributeSet attrs) {
@@ -60,30 +51,56 @@ public class CalendarPicker extends LinearLayout
   }
 
   public DatePickerView getDayPickerView() {
-    return mDayPickerView;
-  }
-
-  @Override public void onYearChange(int year) {
-    mTxtYear.setText(String.valueOf(year));
-  }
-
-  @Override public void onSelectStateChange(boolean isEnable) {
-    mBtnConfirm.setEnabled(isEnable);
+    return mDatePickerView;
   }
 
   public SimpleMonthAdapter.SelectedDays<SimpleMonthAdapter.CalendarDay> getSelectedDays() {
-    return mDayPickerView.getSimpleMonthAdapter().getSelectedDays();
+    return mDatePickerView.getSimpleMonthAdapter().getSelectedDays();
   }
 
-  public void setOnConfirmListener(OnClickListener listener) {
-    mBtnConfirm.setOnClickListener(listener);
+  @Override public void updateUi() {
+    mDatePickerView.invalidate();
   }
 
-  public void setDayPickerListener(DatePickerListener listener) {
-    mDayPickerView.setDatePickerListener(listener);
+  @Override public DatePickerController setFirstDate(int year, int month) {
+    mDatePickerView.getSimpleMonthAdapter().setFirstDate(year, month);
+    return this;
   }
 
-  public void scrollerTo() {
-    getDayPickerView().scrollToPosition(5);
+  @Override public DatePickerController setLastDate(int year, int month) {
+    mDatePickerView.getSimpleMonthAdapter().setLastDate(year, month);
+    return this;
+  }
+
+  @Override public DatePickerController setDisableDays(
+      ArrayList<SimpleMonthAdapter.CalendarDay> calendarDays) {
+    mDatePickerView.getSimpleMonthAdapter().setDisableDays(calendarDays);
+    mDatePickerView.getAdapter().notifyDataSetChanged();
+    return this;
+  }
+
+  public DatePickerController setDayPickerListener(DatePickerListener listener) {
+    mDatePickerView.getSimpleMonthAdapter().setDatePickerListener(listener);
+    return this;
+  }
+
+  @Override public DatePickerController setSelectMode(int mode, @Nullable int fixSelectDay) {
+    mDatePickerView.getSimpleMonthAdapter().setSelectMode(mode, fixSelectDay);
+    return this;
+  }
+
+  public void scrollerToPosition(int position) {
+    getDayPickerView().scrollToPosition(position);
+  }
+
+  // 当滑动  年份变化时回调
+  public void setOnYearChangeListener(DatePickerView.OnYearChangedListener listener) {
+    mDatePickerView.setOnYearChangedListener(listener);
+  }
+
+  //当 用户选中天数 满足 SelectState时 回到，如 Multi 则选中一个返回，Single 则选中一天
+  public void setOnSelectStateChangeListener(
+      SimpleMonthAdapter.OnSelectStateChangeListener listener) {
+    mDatePickerView.getSimpleMonthAdapter().setOnSelectStateChangeListener(listener);
   }
 }

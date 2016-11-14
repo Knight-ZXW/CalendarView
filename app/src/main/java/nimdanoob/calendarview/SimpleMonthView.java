@@ -5,13 +5,10 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.text.format.DateUtils;
 import android.text.format.Time;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import java.security.InvalidParameterException;
@@ -49,8 +46,7 @@ public class SimpleMonthView extends View {
   private final StringBuilder mStringBuilder;
   private final Calendar mCalendar;
   private final Calendar mDayLabelCalendar;
-  private final Boolean isPrevDayEnabled;
-  private final int mSelectedFirstOrLastCircleColor;
+  private final int mSelectedFirstCircleColor;
   protected int mPadding = 0;
   protected Paint mMonthDayLabelPaint;
   protected Paint mMonthNumPaint;
@@ -124,14 +120,14 @@ public class SimpleMonthView extends View {
         resources.getColor(R.color.calendarSelectedDayText));
     mSelectedCircleColor = typedArray.getColor(R.styleable.DatePickerView_colorCircleBackground,
         resources.getColor(R.color.calendarSelectedCircle));
-    mSelectedFirstOrLastCircleColor =
-        typedArray.getColor(R.styleable.DatePickerView_colorSelectedFirstOrLastDayBackground,
-            resources.getColor(R.color.calendarSelectedFirstOrLastBgColor));
+    mSelectedFirstCircleColor =
+        typedArray.getColor(R.styleable.DatePickerView_colorSelectedFirstDayBackground,
+            resources.getColor(R.color.calendarSelectedFirstColor));
     mSelectedRectColor = typedArray.getColor(R.styleable.DatePickerView_colorRectBackground,
         resources.getColor(R.color.calendarSelectedRect));
     mMonthTitleBGColor = typedArray.getColor(R.styleable.DatePickerView_colorSelectedDayText,
         resources.getColor(R.color.calendarMonthTitleBg));
-    mFirstEqualsLastDayNumColor = resources.getColor(R.color.calendarFirstEqualsLastNumBackground);
+    mFirstEqualsLastDayNumColor = resources.getColor(R.color.calendarFirstEqualsLastNumColor);
     mSeperatorColor = resources.getColor(R.color.calendarSeperatorColor);
     mSeperatorWidth = resources.getDimension(R.dimen.calendar_seperator_width);
     mDrawRect = typedArray.getBoolean(R.styleable.DatePickerView_drawRoundRect, false);
@@ -156,8 +152,6 @@ public class SimpleMonthView extends View {
 
     mRowHeight = ((typedArray.getDimensionPixelSize(R.styleable.DatePickerView_calendarHeight,
         resources.getDimensionPixelOffset(R.dimen.calendar_height))) / 6);
-
-    isPrevDayEnabled = typedArray.getBoolean(R.styleable.DatePickerView_enablePreviousDay, true);
     initView();
   }
 
@@ -170,7 +164,7 @@ public class SimpleMonthView extends View {
     mMonthTitlePaint.setFakeBoldText(true);
     mMonthTitlePaint.setAntiAlias(true);
     mMonthTitlePaint.setTextSize(MONTH_LABEL_TEXT_SIZE);
-    mMonthTitlePaint.setTypeface(Typeface.create(mMonthTitleTypeface, Typeface.BOLD));
+    mMonthTitlePaint.setTypeface(Typeface.create(mMonthTitleTypeface, Typeface.NORMAL));
     mMonthTitlePaint.setColor(mMonthTextColor);
     mMonthTitlePaint.setTextAlign(Paint.Align.CENTER);
     mMonthTitlePaint.setStyle(Paint.Style.FILL);
@@ -183,12 +177,9 @@ public class SimpleMonthView extends View {
     mMonthTitleBGPaint.setStyle(Paint.Style.FILL);
 
     mSelectedCirclePaint = new Paint();
-    //mSelectedCirclePaint.setFakeBoldText(true);
     mSelectedCirclePaint.setAntiAlias(true);
     mSelectedCirclePaint.setColor(mSelectedCircleColor);
-    //mSelectedCirclePaint.setTextAlign(Paint.Align.CENTER);
     mSelectedCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
-    //mSelectedCirclePaint.setAlpha(SELECTED_CIRCLE_ALPHA);
 
     mSelectedRectPaint = new Paint();
     mSelectedRectPaint.setFakeBoldText(true);
@@ -269,7 +260,6 @@ public class SimpleMonthView extends View {
     }
     //why?
     if (dayOffset == 6) {
-      Log.e("zxw", "今天" + c + "是dayOffset==6");
       firstX = (int) (determineMaxTextSize(mMonthName, rectWidth * 2,
           paddingDay * (1 + dayOffset * 2) + mPadding, dayOffset)
           - mMonthTitlePaint.measureText(mMonthName) / 2);
@@ -286,54 +276,29 @@ public class SimpleMonthView extends View {
         mMonthNumPaint.setColor(mDayNumColor);
         mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
       }
-      if (isDisableDay(day)) {  // todo 设置变量判断不可用天数是否可用
-        Log.e("zxw", "发现一个不可用的天数");
-        mMonthNumPaint.setColor(mDisableDayNumColor);
-      }
 
-      //if ((mMonth == mSelectedBeginMonth && mSelectedBeginDay == day && mSelectedBeginYear == mYear)
-      //    || (mMonth == mSelectedLastMonth
-      //    && mSelectedLastDay == day
-      //    && mSelectedLastYear == mYear)) {
-      //  //如果是首尾  目前 是普通颜色
-      //  mMonthNumPaint.setColor(mDayNumColor);
-      //}
 
-      if (equalsBeginAndLastDay(day)) {
-        // First 和 Last 相同
-        mMonthNumPaint.setColor(mFirstEqualsLastDayNumColor);
-      }
-
-      if (mSelectedBeginDay != -1 && mSelectedLastDay != -1) { //if have range days
-        if (firstCalendar.compareTo(lastCalendar) != 0 && c.compareTo(firstCalendar) == 0 && (
-            dayOffset == 6
-                || day == mNumCells)) { //if current day is selected last day and in the line last
+      if ((isBeginDay(day)
+          && mSelectedLastDay == -1) || equalsBeginAndLastDay(day)) {//画首尾圆
+        if (mDrawRect) {
+          RectF rectF = new RectF(x - DAY_SELECTED_CIRCLE_SIZE,
+              (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) - DAY_SELECTED_CIRCLE_SIZE,
+              x + DAY_SELECTED_CIRCLE_SIZE,
+              (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) + DAY_SELECTED_CIRCLE_SIZE);
+          canvas.drawRoundRect(rectF, 10.0f, 10.0f, mSelectedCirclePaint);
+        } else {
+          mSelectedCirclePaint.setColor(mSelectedFirstCircleColor);
           canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE,
               mSelectedCirclePaint);
-        } else if (firstCalendar.compareTo(lastCalendar) != 0
-            && c.compareTo(firstCalendar) == 0) { // else draw left rect
-          drawArcRect(canvas, DRAW_RECT_WITH_CURVE_ON_LEFT, x, y, rectWidth, mSelectedCirclePaint);
-        }
-        if (firstCalendar.compareTo(lastCalendar) != 0 && c.compareTo(lastCalendar) == 0 && (
-            dayOffset == 0
-                || day == 1)) {
-          canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE,
-              mSelectedCirclePaint);
-        } else if (firstCalendar.compareTo(lastCalendar) != 0 && c.compareTo(lastCalendar) == 0) {
-          drawArcRect(canvas, DRAW_RECT_WITH_CURVE_ON_RIGHT, x, y, rectWidth, mSelectedCirclePaint);
         }
       }
 
-      if (mSelectedBeginDay != -1
-          && mSelectedLastDay != -1
+      if (isSelectedRangeDays()
           && (c.compareTo(firstCalendar) > 0 && c.compareTo(lastCalendar) < 0)
           ) {
-        // 首尾之间
+        // day 处于首尾之间
         mMonthNumPaint.setColor(mSelectedDaysColor);
-        //if (dayOffset == 6 && (day == mSelectedBeginDay || day == mSelectedLastDay)) {
-        //  canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE,
-        //      mSelectedCirclePaint);
-        //}
+
         if (dayOffset == 6 && day == 1) {
           canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE,
               mSelectedRectPaint);
@@ -350,32 +315,38 @@ public class SimpleMonthView extends View {
         }
       }
 
-      //画首尾圆
-      if ((mMonth == mSelectedBeginMonth && mSelectedBeginDay == day && mSelectedBeginYear == mYear)
-          || (mMonth == mSelectedLastMonth
-          && mSelectedLastDay == day
-          && mSelectedLastYear == mYear)) {
-        if (mDrawRect) {
-          RectF rectF = new RectF(x - DAY_SELECTED_CIRCLE_SIZE,
-              (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) - DAY_SELECTED_CIRCLE_SIZE,
-              x + DAY_SELECTED_CIRCLE_SIZE,
-              (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) + DAY_SELECTED_CIRCLE_SIZE);
-          canvas.drawRoundRect(rectF, 10.0f, 10.0f, mSelectedCirclePaint);
-        } else {
-          mSelectedCirclePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.LIGHTEN));
-          mSelectedCirclePaint.setColor(mSelectedFirstOrLastCircleColor);
+      if (isSelectedRangeDays()) { //已经选择了一个区间，判断是否绘制区间内
+        mSelectedCirclePaint.setColor(mSelectedCircleColor);
+        if (firstCalendar.compareTo(lastCalendar) != 0 && c.compareTo(firstCalendar) == 0 && (
+            dayOffset == 6
+                || day == mNumCells)) { //如果是区间开头，且在 最后一个位置 则画圆
           canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE,
               mSelectedCirclePaint);
-          mSelectedCirclePaint.setXfermode(null);
+        } else if (firstCalendar.compareTo(lastCalendar) != 0
+            && c.compareTo(firstCalendar) == 0) { // else draw left rect
+          drawCircleRect(canvas, DRAW_RECT_WITH_CURVE_ON_LEFT, x, y, rectWidth,
+              mSelectedCirclePaint);
+        }
+        if (firstCalendar.compareTo(lastCalendar) != 0 && c.compareTo(lastCalendar) == 0 && (
+            dayOffset == 0
+                || day == 1)) {
+          canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE,
+              mSelectedCirclePaint);
+        } else if (firstCalendar.compareTo(lastCalendar) != 0 && c.compareTo(lastCalendar) == 0) {
+          drawCircleRect(canvas, DRAW_RECT_WITH_CURVE_ON_RIGHT, x, y, rectWidth,
+              mSelectedCirclePaint);
         }
       }
 
-      if (!isPrevDayEnabled
-          && prevDay(day, today)
-          && today.month == mMonth
-          && today.year == mYear) {
-        mMonthNumPaint.setColor(mPreviousDayColor);
-        mMonthNumPaint.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+      if (equalsBeginAndLastDay(day)) {
+        // First 和 Last 相同
+        mMonthNumPaint.setColor(mFirstEqualsLastDayNumColor);
+      }
+
+
+
+      if (isDisableDay(day)) {  // todo 设置变量判断不可用天数是否可用
+        mMonthNumPaint.setColor(mDisableDayNumColor);
       }
 
       canvas.drawText(String.format("%d", day), x, y, mMonthNumPaint);
@@ -395,6 +366,15 @@ public class SimpleMonthView extends View {
     }
     canvas.drawLine(0, y - MINI_DAY_NUMBER_TEXT_SIZE / 3 - mRowHeight / 2, getWidth(),
         y - MINI_DAY_NUMBER_TEXT_SIZE / 3 - mRowHeight / 2, mSeperatorPaint);
+  }
+
+  private boolean isSelectedRangeDays() {
+    return mSelectedBeginDay != -1
+        && mSelectedLastDay != -1;
+  }
+
+  private boolean isBeginDay(int day) {
+    return mMonth == mSelectedBeginMonth && mSelectedBeginDay == day && mSelectedBeginYear == mYear;
   }
 
   private boolean equalsBeginAndLastDay(int day) {
@@ -436,8 +416,6 @@ public class SimpleMonthView extends View {
             y - MINI_DAY_NUMBER_TEXT_SIZE / 3 + DAY_SELECTED_CIRCLE_SIZE);
         canvas.drawRect(rectF1, mSelectedRectPaint);
         canvas.drawArc(rectF2, 90, 180, true, circlePaint);
-        //canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE,
-        //   mSelectedRectPaint);
         break;
       case DRAW_RECT_WITH_CURVE_ON_RIGHT:
         RectF rectF3 = new RectF(x - rectWidth,
@@ -449,7 +427,28 @@ public class SimpleMonthView extends View {
             y - MINI_DAY_NUMBER_TEXT_SIZE / 3 + DAY_SELECTED_CIRCLE_SIZE);
         canvas.drawRect(rectF3, mSelectedRectPaint);
         canvas.drawArc(rectF4, 270, 180, true, circlePaint);
+        break;
+    }
+  }
 
+  private void drawCircleRect(Canvas canvas, int mode, int x, int y, int rectWidth,
+      Paint circlePaint) {
+    switch (mode) {
+      case DRAW_RECT_WITH_CURVE_ON_LEFT:
+        RectF rectF1 = new RectF(x,
+            (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) - DAY_SELECTED_CIRCLE_SIZE, x + rectWidth,
+            (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) + DAY_SELECTED_CIRCLE_SIZE);
+        canvas.drawRect(rectF1, mSelectedRectPaint);
+        canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE,
+            circlePaint);
+        break;
+      case DRAW_RECT_WITH_CURVE_ON_RIGHT:
+        RectF rectF3 = new RectF(x - rectWidth,
+            (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) - DAY_SELECTED_CIRCLE_SIZE, x,
+            (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) + DAY_SELECTED_CIRCLE_SIZE);
+        canvas.drawRect(rectF3, mSelectedRectPaint);
+        canvas.drawCircle(x, y - MINI_DAY_NUMBER_TEXT_SIZE / 3, DAY_SELECTED_CIRCLE_SIZE,
+            circlePaint);
         break;
     }
   }
@@ -463,11 +462,6 @@ public class SimpleMonthView extends View {
     if (dayOffset == 6) return x - offset;
     if (dayOffset == 0) return x + offset;
     return x;
-  }
-
-  private boolean prevDay(int monthDay, Time time) {
-    return ((mYear < time.year)) || (mYear == time.year && mMonth < time.month) || (mMonth
-        == time.month && monthDay < time.monthDay);
   }
 
   public SimpleMonthAdapter.CalendarDay getDayFromLocation(float x, float y) {
@@ -504,15 +498,15 @@ public class SimpleMonthView extends View {
     mStringBuilder.setLength(0);
     long millis = mCalendar.getTimeInMillis();
     String monthStr = DateUtils.formatDateTime(getContext(), millis, flags);
-    if (monthStr.endsWith("月")){
-      return new SimpleDateFormat("M").format(mCalendar.getTime())+"月";
+    if (monthStr.endsWith("月")) {
+      return new SimpleDateFormat("M").format(mCalendar.getTime()) + "月";
     }
     return monthStr;
   }
 
   public void setMonthParams(HashMap<String, Integer> params) {
     //todo 这里应该是 ||
-    if (!params.containsKey(VIEW_PARAMS_MONTH) && !params.containsKey(VIEW_PARAMS_YEAR)) {
+    if (!params.containsKey(VIEW_PARAMS_MONTH) || !params.containsKey(VIEW_PARAMS_YEAR)) {
       throw new InvalidParameterException("You must specify month and year for this view");
     }
     setTag(params);
@@ -566,7 +560,6 @@ public class SimpleMonthView extends View {
         mToday = day;
       }
 
-      mIsPrev = prevDay(day, today);
     }
 
     mNumRows = calculateNumRows();
@@ -587,7 +580,7 @@ public class SimpleMonthView extends View {
     //如果是不可用直接退出
     if (mDisableDays.contains(calendarDay)) return;
 
-    if (mOnDayClickListener != null && (isPrevDayEnabled || !((calendarDay.month == today.month)
+    if (mOnDayClickListener != null && (!((calendarDay.month == today.month)
         && (calendarDay.year == today.year)
         && calendarDay.day < today.monthDay))) {
       mOnDayClickListener.onDayClick(this, calendarDay);
