@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     tools:context="nimdanoob.calendarview.MainActivity">
   <nimdanoob.calenderpickerview.CalendarPicker
+      android:id="@+id/calendarPicker"
       android:layout_width="match_parent" android:layout_height="match_parent"
       app:cp_selectMode="SELECT_MODE_MULTI"/>
 </RelativeLayout>

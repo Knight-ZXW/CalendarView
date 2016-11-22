@@ -2,23 +2,21 @@ package nimdanoob.calenderpickerview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.LinearLayout;
 import java.util.ArrayList;
 
 public class CalendarPicker extends LinearLayout
     implements DatePickerController {
 
+  public static final int SELECT_MODE_MULTI = 100;
+  public static final int SELECT_MODE_SINGLE = 101;
+  public static final int SELECT_MODE_FIX = 102;
   private DatePickerView mDatePickerView;
   private int mSelectMode;
   private int mFixDayLength;
-  private Drawable mCalendarBg;
-  private View mHeaderView;
-  private Drawable mCalendarHeaderBg;
 
   public CalendarPicker(Context context) {
     this(context, null);
@@ -38,20 +36,9 @@ public class CalendarPicker extends LinearLayout
     setOrientation(VERTICAL);
     LayoutInflater.from(context).inflate(R.layout.calendar_list, this);
     mDatePickerView = (DatePickerView) findViewById(R.id.daypicker);
-    mHeaderView =  findViewById(R.id.container_label);
     if (mSelectMode != 0) {
       mDatePickerView.getSimpleMonthAdapter().setSelectMode(mSelectMode, mFixDayLength);
     }
-    if (mCalendarBg!=null) {
-      mDatePickerView.setBackgroundDrawable(mCalendarBg);
-    }
-    if (mCalendarHeaderBg != null){
-      mHeaderView.setBackgroundDrawable(mCalendarHeaderBg);
-    }
-  }
-
-  public DatePickerController getController() {
-    return this;
   }
 
   private void populateAttributes(Context context, AttributeSet attrs) {
@@ -59,9 +46,6 @@ public class CalendarPicker extends LinearLayout
         context.getTheme().obtainStyledAttributes(attrs, R.styleable.CalendarPicker, 0, 0);
     mSelectMode = ta.getInt(R.styleable.CalendarPicker_cp_selectMode, 0);
     mFixDayLength = ta.getInt(R.styleable.CalendarPicker_cp_fixDayLength, 0);
-    mCalendarBg =
-        ta.getDrawable(R.styleable.CalendarPicker_cp_background);
-    mCalendarHeaderBg =  ta.getDrawable(R.styleable.CalendarPicker_cp_header_background);
     ta.recycle();
   }
 
@@ -74,7 +58,7 @@ public class CalendarPicker extends LinearLayout
   }
 
   @Override public void updateUi() {
-    mDatePickerView.invalidate();
+
   }
 
   @Override public DatePickerController setFirstDate(int year, int month) {
@@ -104,18 +88,7 @@ public class CalendarPicker extends LinearLayout
     return this;
   }
 
-  public void scrollerToPosition(int position) {
-    getDayPickerView().scrollToPosition(position);
-  }
-
-  // 当滑动  年份变化时回调
-  public void setOnYearChangeListener(DatePickerView.OnYearChangedListener listener) {
-    mDatePickerView.setOnYearChangedListener(listener);
-  }
-
-  //当 用户选中天数 满足 SelectState时 回到，如 Multi 则选中一个返回，Single 则选中一天
-  public void setOnSelectStateChangeListener(
-      SimpleMonthAdapter.OnSelectStateChangeListener listener) {
-    mDatePickerView.getSimpleMonthAdapter().setOnSelectStateChangeListener(listener);
+  public void scrollerTo() {
+    getDayPickerView().scrollToPosition(5);
   }
 }
