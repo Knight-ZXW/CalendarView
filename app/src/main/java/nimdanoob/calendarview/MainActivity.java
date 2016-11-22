@@ -15,6 +15,6 @@ public class MainActivity extends AppCompatActivity {
     CalendarPicker calendarPicker = (CalendarPicker) findViewById(R.id.calendarPicker);
     calendarPicker.setFirstDate(2011,1);
     calendarPicker.setLastDate(2015,2);
-    calendarPicker.getController().setDisableDays(new ArrayList<SimpleMonthAdapter.CalendarDay>());
+    calendarPicker.setDisableDays(new ArrayList<SimpleMonthAdapter.CalendarDay>());
   }
 }
