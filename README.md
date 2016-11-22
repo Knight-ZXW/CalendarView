@@ -24,3 +24,23 @@
   DatePickerController setOnYearChangeListener(DatePickerView.OnYearChangedListener listener);
   SimpleMonthAdapter.SelectedDays<SimpleMonthAdapter.CalendarDay> getSelectedDays();
 ```
+
+### 添加依赖
+
+1.在项目外层的build.gradle中添加JitPack仓库
+
+```
+repositories {
+	maven {
+		url "https://jitpack.io"
+	}
+}
+```
+
+2.在用到的项目中添加依赖  
+>	compile 'com.github.nimdanoob:CalendarView:[Latest release](https://github.com/nimdanoob/CalendarView/releases)(<-click it)'  
+
+**举例：**
+```
+compile 'com.github.nimdanoob:CalendarView:v0.1.0'
+```
